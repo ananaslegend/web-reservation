@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WebReservation.Data.Context;
 using WebReservation.Data.Models;
@@ -19,7 +20,10 @@ namespace WebReservation.API.Controllers
         public ReservationController(IRepository<Reservation> reservationContext)
             => this.reservationContext = (ReservationRepository)reservationContext;
         
-
+        [HttpGet("hello")] 
+        public string Hello() 
+            => "Hello world!";
+        
         [HttpGet] 
         public IEnumerable<Reservation> Get() 
             => reservationContext.All;
