@@ -34,7 +34,7 @@ namespace WebReservation.API
             // Add Controllers
             services.AddControllers();
 
-            // Add DB connection, Migrations (most likely not working)
+            // Add DB connection, Migrations 
             var connectionString = Configuration.GetConnectionString("DefaultConnection");
             
             services.AddDbContext<WebReservationContext>(options =>
@@ -50,6 +50,8 @@ namespace WebReservation.API
         
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            PrepDB.ApplyMigration(app);
+            
             app.UseSwagger();
 
             app.UseSwaggerUI(c =>
@@ -60,12 +62,12 @@ namespace WebReservation.API
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             app.UseRouting();
             
             app.UseAuthorization();
-            
+
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
     }

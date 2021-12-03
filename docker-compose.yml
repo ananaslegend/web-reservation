@@ -1,0 +1,17 @@
+﻿version: '3.7'
+
+services:
+  psql-server:
+    image: postgres
+    environment:
+      POSTGRES_USER: "webadmin"
+      POSTGRES_PASSWORD: "password"
+      POSTGRES_DB: "postgres"
+    ports: 
+      - "5432:5432"
+    
+  web-api:
+    build: .
+    ports: 
+      - "8080:80"
+      

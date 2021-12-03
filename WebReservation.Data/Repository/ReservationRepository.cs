@@ -36,7 +36,7 @@ namespace WebReservation.Data.Repository
             context.SaveChanges();
         }
 
-        public Reservation FindById(int Id)
+        public Reservation FindById(int Id) // ActionResult
             => context.Reservations.FirstOrDefault(e => e.id == Id);
         
         // todo доделать

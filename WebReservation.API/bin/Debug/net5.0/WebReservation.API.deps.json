@@ -1435,7 +1435,8 @@
         "dependencies": {
           "EntityFramework6.Npgsql": "6.4.3",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "5.0.10",
-          "Npgsql.EntityFrameworkCore.PostgreSQL.Design": "1.1.0"
+          "Npgsql.EntityFrameworkCore.PostgreSQL.Design": "1.1.0",
+          "Swashbuckle.AspNetCore": "6.2.3"
         },
         "runtime": {
           "WebReservation.Data.dll": {}
