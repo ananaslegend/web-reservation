@@ -12,7 +12,6 @@ namespace WebReservation.Data.Models
         public Reservation(string guestName, string phoneNumber, int year, int month, int day, int dayHours, 
             int minutes, int hours, int numTable, int hall, string guestComment, int guestNumber)
         {
-            //this.id = id;
             GuestName = guestName;
             PhoneNumber = phoneNumber;
             ReservationDate = new DateTime(year, month, day, dayHours, minutes, 0);

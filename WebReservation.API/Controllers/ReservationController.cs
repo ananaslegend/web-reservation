@@ -19,42 +19,57 @@ namespace WebReservation.API.Controllers
 
         public ReservationController(IRepository<Reservation> reservationContext)
             => this.reservationContext = (ReservationRepository)reservationContext;
-        
-        [HttpGet("hello")] 
-        public string Hello() 
-            => "Hello world!";
-        
-        [HttpGet] 
-        public IEnumerable<Reservation> Get() 
-            => reservationContext.All;
 
-        [HttpGet("id/{int id}")] 
-        public ActionResult<Reservation> Get(int id) 
-            => reservationContext.FindById(id);
+        [HttpGet("all")]
+        public ActionResult<IEnumerable<Reservation>> Get()
+        {
+            if (!reservationContext.All.Any()) 
+                return NotFound();
+            
+            return Ok(reservationContext.All);
+        }
 
-        [HttpGet("name/{guestName}")]
-        public ActionResult<Reservation> Get(string guestName) 
-            => reservationContext.FindByName(guestName);
+        [HttpGet("id/{id}")]
+        public ActionResult<Reservation> Get(int id)
+        {
+            var reservation = reservationContext.FindById(id);
+            if (reservation == null)
+                return NotFound();
+            return reservation;
+        }
 
-        [HttpDelete("remove/{guestName}")]
-        public void Delete(string guestName)
-            => reservationContext.Delete(reservationContext.FindByName(guestName));
+        [HttpDelete("remove/{id}")]
+        public ActionResult Delete(int id)
+        {
+            var reservation = reservationContext.FindById(id);
+            if (reservation == null)
+                return NotFound();
+            reservationContext.Delete(reservation);
+            return Ok();
+        }
 
         [HttpGet("find-by-date/{year},{month},{day},{hours},{minutes}")]
-        public Reservation FindByDate(int year, int month, int day, int hours, int minutes)
-            => reservationContext.FindByDate(new DateTime(year, month, day, hours, minutes, 0)); //2021, 6, 4, 22, 0
-        
+        public ActionResult<List<Reservation>> FindByDate(int year, int month, int day, int hours, int minutes)
+            => Ok(reservationContext.FindAllDayReservations(new DateTime(year, month, day, hours, minutes, 0)));
+
         [HttpGet("find-by-date/{year},{month},{day}")]
-        public Reservation FindByDate(int year, int month, int day)
-            => reservationContext.FindByDate(new DateTime(year, month, day));
+        public ActionResult<List<Reservation>> FindByDate(int year, int month, int day)
+            => Ok(reservationContext.FindAllDayReservations(new DateTime(year, month, day)));
 
         [HttpGet("find-free-tables/{hall},{year},{month},{day},{dayHours},{minutes},{hours},{guestNumber}")]
-        public IEnumerable<bool> FindFreeTables(int hall, int year, int month, int day, int dayHours, int minutes, int hours, int guestNumber)
+        public ActionResult<IEnumerable<bool>> FindFreeTables(int hall, int year, int month, int day, int dayHours, int minutes, int hours, int guestNumber)
             => reservationContext.FindFreeTables(hall, year, month, day, dayHours, minutes, hours, guestNumber);
 
+        // [HttpPost("add-resevation/{guestName},{phoneNumber},{year},{month},{day},{dayHours},{minutes},{hours}," +
+        //           "{numTable}, {hall},{guestComment},{guestNumber}")]
+        // public ActionResult<int> AddReservation(string guestName, string phoneNumber, int year, int month, int day, int dayHours,
+        //     int minutes, int hours, int numTable, int hall, string guestComment, int guestNumber)
+        //     => reservationContext.AddReservation(guestName, phoneNumber, year, month, day, dayHours, minutes,
+        //         hours, numTable, hall, guestComment, guestNumber);
+        
         [HttpPost("add-resevation/{guestName},{phoneNumber},{year},{month},{day},{dayHours},{minutes},{hours}," +
                   "{numTable}, {hall},{guestComment},{guestNumber}")]
-        public int AddReservation(string guestName, string phoneNumber, int year, int month, int day, int dayHours,
+        public ActionResult<int> AddReservation(string guestName, string phoneNumber, int year, int month, int day, int dayHours,
             int minutes, int hours, int numTable, int hall, string guestComment, int guestNumber)
             => reservationContext.AddReservation(guestName, phoneNumber, year, month, day, dayHours, minutes,
                 hours, numTable, hall, guestComment, guestNumber);

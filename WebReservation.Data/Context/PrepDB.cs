@@ -16,21 +16,16 @@ namespace WebReservation.Data.Context
                 var context = serviceScope.ServiceProvider.GetRequiredService<WebReservationContext>();
                 context.Database.Migrate();
                 if (!context.Reservations.Any())
+                { 
                     context.Reservations.Add(
-                        new Reservation("Daniil", "380-63-788-83-90", 2021, 12, 12, 12, 0,
+                        new Reservation("Daniil", "380-63-788-83-90", 2021, 12, 12, 12, 0, 
                             12, 1, 1, "test that need to rm", 1));
+                    context.SaveChanges();
+                }
             }
             
         }
 
-        // public static void SeedData(WebReservationContext context)
-        // {
-        //     context.Database.Migrate();
-        //
-        //     // if (!context.Reservations.Any())
-        //     //     context.Reservations.Add(
-        //     //         new Reservation("Daniil", "380-63-788-83-90", 2021, 12, 12, 12, 0,
-        //     //             12, 1, 1, "test that need to rm", 1));
-        // }
+        
     }
 }

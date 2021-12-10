@@ -36,20 +36,20 @@ namespace WebReservation.Data.Repository
             context.SaveChanges();
         }
 
-        public Reservation FindById(int Id) // ActionResult
-            => context.Reservations.FirstOrDefault(e => e.id == Id);
+        public Reservation FindById(int Id) 
+            => context.Reservations.Find(Id);
         
         // todo доделать
         public Reservation FindByName(string guestName)
             => context.Reservations.FirstOrDefault(guest => guest.GuestName == guestName);
 
         
-        // todo доделать
+        // todo rm
         public Reservation FindByDate(DateTime dateTime)
             => context.Reservations.FirstOrDefault(date => date.ReservationDate == dateTime);
         
         // todo можно сделать лучше
-        private List<Reservation> FindAllDayReservations(DateTime dateTime)
+        public List<Reservation> FindAllDayReservations(DateTime dateTime)
             => context.Reservations.ToList().Where(reservation => 
                 reservation.ReservationDate.ToString().StartsWith($"{dateTime.ToShortDateString()}")).ToList();
 

@@ -17,8 +17,7 @@ namespace WebReservation.Data.Context
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-             // optionsBuilder.UseNpgsql(
-             //     "Server=psql-server;Port=5432;Database=postgres;User Id=webadmin;Password=password;");
+             
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
