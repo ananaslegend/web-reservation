@@ -114,16 +114,27 @@ namespace WebReservation.Data.Repository
             return result;
         }
 
-        public int AddReservation(string guestName, string phoneNumber, int year, int month, int day, int dayHours, 
-            int minutes, int hours, int numTable, int hall, string guestComment, int guestNumber)
+        public int AddReservation(Reservation _reservation)
         {
-            Reservation reservation = new(guestName, phoneNumber, year, month, day, dayHours, minutes,
-                hours, numTable, hall,guestComment, guestNumber);
+            var reservation = _reservation;
             
             context.Reservations.Add(reservation);
             context.SaveChanges();
         
             return reservation.id;
         }
+        
+        public int AddReservation(string guestName, string phoneNumber,DateTime dateTime, int hours, int numTable, int hall, string guestComment, int guestNumber)
+        {
+            Reservation reservation = new(guestName, phoneNumber, dateTime, hours, numTable, hall, guestComment,
+                guestNumber);
+            
+            context.Reservations.Add(reservation);
+            context.SaveChanges();
+        
+            return reservation.id;
+        }
+        
+        
     }
 }

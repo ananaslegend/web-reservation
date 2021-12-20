@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -45,7 +47,12 @@ namespace WebReservation.API
 
             // Add Swagger
             services.AddSwaggerGen(c =>
-                c.SwaggerDoc("v1", new OpenApiInfo {Title = "Web Reservation", Version = "v1"}));
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo {Title = "Web Reservation", Version = "v1"});
+                var xmlFiles = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFiles);
+                c.IncludeXmlComments(xmlPath);
+            });
         }
         
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

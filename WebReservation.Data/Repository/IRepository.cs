@@ -9,6 +9,6 @@ namespace WebReservation.Data.Repository
         void Add(TEntity entity);
         void Delete(TEntity entity);
         void Update(TEntity entity);
-        //TEntity FindById(int Id);
+        TEntity FindById(int Id);
     }
 }

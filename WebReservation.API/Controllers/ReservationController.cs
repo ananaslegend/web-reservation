@@ -20,6 +20,13 @@ namespace WebReservation.API.Controllers
         public ReservationController(IRepository<Reservation> reservationContext)
             => this.reservationContext = (ReservationRepository)reservationContext;
 
+        
+        /// <summary>
+        /// Get all reservation in database
+        /// </summary>
+        /// <returns>All reservation</returns>
+        /// <response code="200">Success request</response>
+        /// <response code="404">Database is empty</response>
         [HttpGet("all")]
         public ActionResult<IEnumerable<Reservation>> Get()
         {
@@ -29,8 +36,15 @@ namespace WebReservation.API.Controllers
             return Ok(reservationContext.All);
         }
 
-        [HttpGet("id/{id}")]
-        public ActionResult<Reservation> Get(int id)
+        /// <summary>
+        /// Gat one reservation via id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>One reservation</returns>
+        /// <response code="200">Success request</response>
+        /// <response code="404">Reservation with this id does not exist</response>
+        [HttpGet("id")]
+        public ActionResult<Reservation> Get([FromQuery] int id)
         {
             var reservation = reservationContext.FindById(id);
             if (reservation == null)
@@ -38,8 +52,15 @@ namespace WebReservation.API.Controllers
             return reservation;
         }
 
-        [HttpDelete("remove/{id}")]
-        public ActionResult Delete(int id)
+        /// <summary>
+        /// Delete one reservation via id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>One reservation</returns>
+        /// <response code="200">Success request</response>
+        /// <response code="404">Reservation with this id does not exist</response>
+        [HttpDelete("remove")]
+        public ActionResult Delete([FromQuery] int id)
         {
             var reservation = reservationContext.FindById(id);
             if (reservation == null)
@@ -59,20 +80,15 @@ namespace WebReservation.API.Controllers
         [HttpGet("find-free-tables/{hall},{year},{month},{day},{dayHours},{minutes},{hours},{guestNumber}")]
         public ActionResult<IEnumerable<bool>> FindFreeTables(int hall, int year, int month, int day, int dayHours, int minutes, int hours, int guestNumber)
             => reservationContext.FindFreeTables(hall, year, month, day, dayHours, minutes, hours, guestNumber);
-
-        // [HttpPost("add-resevation/{guestName},{phoneNumber},{year},{month},{day},{dayHours},{minutes},{hours}," +
-        //           "{numTable}, {hall},{guestComment},{guestNumber}")]
-        // public ActionResult<int> AddReservation(string guestName, string phoneNumber, int year, int month, int day, int dayHours,
-        //     int minutes, int hours, int numTable, int hall, string guestComment, int guestNumber)
-        //     => reservationContext.AddReservation(guestName, phoneNumber, year, month, day, dayHours, minutes,
-        //         hours, numTable, hall, guestComment, guestNumber);
         
-        [HttpPost("add-resevation/{guestName},{phoneNumber},{year},{month},{day},{dayHours},{minutes},{hours}," +
-                  "{numTable}, {hall},{guestComment},{guestNumber}")]
-        public ActionResult<int> AddReservation(string guestName, string phoneNumber, int year, int month, int day, int dayHours,
-            int minutes, int hours, int numTable, int hall, string guestComment, int guestNumber)
-            => reservationContext.AddReservation(guestName, phoneNumber, year, month, day, dayHours, minutes,
-                hours, numTable, hall, guestComment, guestNumber);
+/// <summary>
+/// Adding reservation / Need an json object веталь, ты сам все знаешь че я тут распираюсь) 
+/// </summary>
+/// <param name="reservation"></param>
+/// <returns>id of reservation</returns>
+        [HttpPost("add-reservation")]
+        public ActionResult<int> AddReservation([FromBody] Reservation reservation)
+            => reservationContext.AddReservation(reservation);
 
     }
 }

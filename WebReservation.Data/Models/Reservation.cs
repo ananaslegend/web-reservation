@@ -9,12 +9,11 @@ namespace WebReservation.Data.Models
         public Reservation() { }
         
         // todo доделать
-        public Reservation(string guestName, string phoneNumber, int year, int month, int day, int dayHours, 
-            int minutes, int hours, int numTable, int hall, string guestComment, int guestNumber)
+        public Reservation(string guestName, string phoneNumber, DateTime dateTime, int hours, int numTable, int hall, string guestComment, int guestNumber)
         {
             GuestName = guestName;
             PhoneNumber = phoneNumber;
-            ReservationDate = new DateTime(year, month, day, dayHours, minutes, 0);
+            ReservationDate = dateTime;
             Hours = hours;
             NumTable = numTable;
             this.hall = hall;
