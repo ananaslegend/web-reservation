@@ -53,7 +53,7 @@ namespace WebReservation.API
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFiles);
                 c.IncludeXmlComments(xmlPath);
             });
-        }
+        } 
         
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
