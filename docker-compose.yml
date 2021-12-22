@@ -9,6 +9,8 @@ services:
       POSTGRES_DB: "postgres"
     ports: 
       - "5432:5432"
+    volumes:
+      - ./docker_postgre_init.sql:/docker-entrypoint-initdb.d/docker_postgre_init.sql
     
   web-api:
     build: .

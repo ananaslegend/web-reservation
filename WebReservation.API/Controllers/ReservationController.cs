@@ -17,7 +17,7 @@ namespace WebReservation.API.Controllers
     {
         private readonly ReservationRepository reservationContext;
 
-        public ReservationController(IRepository<Reservation> reservationContext)
+        public ReservationController(IRepository<reservation> reservationContext)
             => this.reservationContext = (ReservationRepository)reservationContext;
 
         
@@ -28,7 +28,7 @@ namespace WebReservation.API.Controllers
         /// <response code="200">Success request</response>
         /// <response code="404">Database is empty</response>
         [HttpGet("all")]
-        public ActionResult<IEnumerable<Reservation>> Get()
+        public ActionResult<IEnumerable<reservation>> Get()
         {
             if (!reservationContext.All.Any()) 
                 return NotFound();
@@ -44,7 +44,7 @@ namespace WebReservation.API.Controllers
         /// <response code="200">Success request</response>
         /// <response code="404">Reservation with this id does not exist</response>
         [HttpGet("id")]
-        public ActionResult<Reservation> Get([FromQuery] int id)
+        public ActionResult<reservation> Get([FromQuery] int id)
         {
             var reservation = reservationContext.FindById(id);
             if (reservation == null)
@@ -69,26 +69,27 @@ namespace WebReservation.API.Controllers
             return Ok();
         }
 
-        [HttpGet("find-by-date/{year},{month},{day},{hours},{minutes}")]
-        public ActionResult<List<Reservation>> FindByDate(int year, int month, int day, int hours, int minutes)
+        [HttpGet("find-by-date/{year:int},{month:int},{day:int},{hours:int},{minutes:int}")]
+        public ActionResult<List<reservation>> FindByDate(int year, int month, int day, int hours, int minutes)
             => Ok(reservationContext.FindAllDayReservations(new DateTime(year, month, day, hours, minutes, 0)));
 
-        [HttpGet("find-by-date/{year},{month},{day}")]
-        public ActionResult<List<Reservation>> FindByDate(int year, int month, int day)
+        [HttpGet("find-by-date/{year:int},{month:int},{day:int}")]
+        public ActionResult<List<reservation>> FindByDate(int year, int month, int day)
             => Ok(reservationContext.FindAllDayReservations(new DateTime(year, month, day)));
 
-        [HttpGet("find-free-tables/{hall},{year},{month},{day},{dayHours},{minutes},{hours},{guestNumber}")]
+        [HttpGet("find-free-tables/{hall:int},{year:int},{month:int},{day:int},{dayHours:int},{minutes:int},{hours:int},{guestNumber:int}")]
         public ActionResult<IEnumerable<bool>> FindFreeTables(int hall, int year, int month, int day, int dayHours, int minutes, int hours, int guestNumber)
             => reservationContext.FindFreeTables(hall, year, month, day, dayHours, minutes, hours, guestNumber);
         
-/// <summary>
-/// Adding reservation / Need an json object веталь, ты сам все знаешь че я тут распираюсь) 
-/// </summary>
-/// <param name="reservation"></param>
-/// <returns>id of reservation</returns>
+    /// <summary>
+    /// Adding reservation json object  
+    /// </summary>
+    /// <param name="reservation"></param>
+    /// <returns>id of reservation</returns>
+    /// <response code="200">Success request</response>
+    /// <response code="400">Most likely problems with the type of one of the JSON value</response>
         [HttpPost("add-reservation")]
-        public ActionResult<int> AddReservation([FromBody] Reservation reservation)
+        public ActionResult<int> AddReservation([FromBody] reservation reservation)
             => reservationContext.AddReservation(reservation);
-
     }
 }

@@ -10,7 +10,7 @@ using WebReservation.Data.Models;
 
 namespace WebReservation.Data.Repository
 {
-    public class ReservationRepository : IRepository<Reservation>
+    public class ReservationRepository : IRepository<reservation>
     {
         private readonly WebReservationContext context;
         public ReservationRepository(WebReservationContext context)
@@ -18,46 +18,46 @@ namespace WebReservation.Data.Repository
             this.context = context;
         }
         
-        public IEnumerable<Reservation> All 
-            => context.Reservations.ToList();
+        public IEnumerable<reservation> All 
+            => context.reservations.ToList();
 
-        public void Add(Reservation entity) 
-            => context.Reservations.Add(entity);
+        public void Add(reservation entity) 
+            => context.reservations.Add(entity);
 
-        public void Delete(Reservation entity)
+        public void Delete(reservation entity)
         {
-            context.Reservations.Remove(entity);
+            context.reservations.Remove(entity);
             context.SaveChanges();
         }
 
-        public void Update(Reservation entity)
+        public void Update(reservation entity)
         {
-            context.Reservations.Update(entity);
+            context.reservations.Update(entity);
             context.SaveChanges();
         }
 
-        public Reservation FindById(int Id) 
-            => context.Reservations.Find(Id);
+        public reservation FindById(int Id) 
+            => context.reservations.Find(Id);
         
         // todo доделать
-        public Reservation FindByName(string guestName)
-            => context.Reservations.FirstOrDefault(guest => guest.GuestName == guestName);
+        public reservation FindByName(string guestName)
+            => context.reservations.FirstOrDefault(guest => guest.guest_name == guestName);
 
         
         // todo rm
-        public Reservation FindByDate(DateTime dateTime)
-            => context.Reservations.FirstOrDefault(date => date.ReservationDate == dateTime);
+        public reservation FindByDate(DateTime dateTime)
+            => context.reservations.FirstOrDefault(date => date.reservation_date == dateTime);
         
         // todo можно сделать лучше
-        public List<Reservation> FindAllDayReservations(DateTime dateTime)
-            => context.Reservations.ToList().Where(reservation => 
-                reservation.ReservationDate.ToString().StartsWith($"{dateTime.ToShortDateString()}")).ToList();
+        public List<reservation> FindAllDayReservations(DateTime dateTime)
+            => context.reservations.ToList().Where(reservation => 
+                reservation.reservation_date.ToString().StartsWith($"{dateTime.ToShortDateString()}")).ToList();
 
-        private bool BetweenRange(DateTime x, DateTime min, DateTime max)
+        private static bool BetweenRange(DateTime x, DateTime min, DateTime max)
             => ((x > min) & (x < max));
 
         // todo добавить еще метод, чтобы можно было расширить функционал
-        private bool IsItFreeTime(int hall, DateTime dateTime, int hours,  List<Reservation> AllDayReservations, int guestNumber)
+        private static bool IsItFreeTime(int hall, DateTime dateTime, int hours, IReadOnlyList<reservation> AllDayReservations, int guestNumber)
         {
             int min = 0, max = 0;
             List<bool> list = new();
@@ -87,12 +87,19 @@ namespace WebReservation.Data.Repository
             for (var index = 0; index < AllDayReservations.Count; index++)
             {
                 var reservation = AllDayReservations[index];
-                if ((((reservation.NumTable >= min) & (reservation.NumTable <= max)) & (reservation.hall == hall) & (
-                    BetweenRange(reservation.ReservationDate, dateTime, dateTime.AddHours(hours)) ^
-                    BetweenRange(reservation.EndTimeDate, dateTime, dateTime.AddHours(hours)) ^
-                    BetweenRange(dateTime, reservation.ReservationDate, reservation.EndTimeDate))))
-                        
+                if ((((reservation.num_table >= min) & (reservation.num_table <= max)) & (reservation.hall == hall) & (
+                        BetweenRange(reservation.reservation_date, dateTime, dateTime.AddHours(hours)) ^
+                        BetweenRange(reservation.end_time_date, dateTime, dateTime.AddHours(hours)) ^
+                        BetweenRange(dateTime, reservation.reservation_date, reservation.end_time_date))))
+                {
                     list[index] = false;
+                }
+            }
+
+            for (var index = 0; index < list.Count; index++)
+            {
+                var VARIABLE = list[index];
+                Console.WriteLine(index+1 + " - " + VARIABLE);
             }
 
             return list.Contains(true);
@@ -114,27 +121,12 @@ namespace WebReservation.Data.Repository
             return result;
         }
 
-        public int AddReservation(Reservation _reservation)
+        public int AddReservation(reservation _reservation)
         {
-            var reservation = _reservation;
-            
-            context.Reservations.Add(reservation);
+            context.reservations.Add(_reservation);
             context.SaveChanges();
         
-            return reservation.id;
+            return _reservation.id;
         }
-        
-        public int AddReservation(string guestName, string phoneNumber,DateTime dateTime, int hours, int numTable, int hall, string guestComment, int guestNumber)
-        {
-            Reservation reservation = new(guestName, phoneNumber, dateTime, hours, numTable, hall, guestComment,
-                guestNumber);
-            
-            context.Reservations.Add(reservation);
-            context.SaveChanges();
-        
-            return reservation.id;
-        }
-        
-        
     }
 }

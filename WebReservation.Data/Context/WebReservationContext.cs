@@ -8,7 +8,7 @@ namespace WebReservation.Data.Context
 {
     public class WebReservationContext : DbContext
     {
-        public DbSet<Reservation> Reservations { get; set; } 
+        public DbSet<reservation> reservations { get; set; } 
 
         public WebReservationContext(DbContextOptions<WebReservationContext> options): base(options)
         {

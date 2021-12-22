@@ -39,11 +39,10 @@ namespace WebReservation.API
             // Add DB connection, Migrations 
             var connectionString = Configuration.GetConnectionString("DefaultConnection");
             
-            services.AddDbContext<WebReservationContext>(options =>
-                options.UseNpgsql(connectionString, b => b.MigrationsAssembly("WebReservation.Data")));
+            services.AddDbContext<WebReservationContext>(options => options.UseNpgsql(connectionString));
 
             // Add Repo pattern for Reservation
-            services.AddScoped<IRepository<Reservation>, ReservationRepository>();
+            services.AddScoped<IRepository<reservation>, ReservationRepository>();
 
             // Add Swagger
             services.AddSwaggerGen(c =>

@@ -12,19 +12,19 @@ namespace WebReservation.Data.Context
     { 
         public static void ApplyMigration(IApplicationBuilder app)
         {
-            using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+            using var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
+            var context = serviceScope.ServiceProvider.GetRequiredService<WebReservationContext>();
+                
+            if (!context.reservations.Any())
             {
-                var context = serviceScope.ServiceProvider.GetRequiredService<WebReservationContext>();
-                context.Database.Migrate();
-                if (!context.Reservations.Any())
-                { 
-                    context.Reservations.Add(
-                        new Reservation("Daniil", "380-63-788-83-90", new DateTime(2021, 12, 12, 12, 0, 0), 
-                            12, 1, 1, "test that need to rm", 1));
+                for (var i = 1; i < 17; i++)
+                {
+                    context.reservations.Add(
+                        new reservation("Daniil", "380-63-788-83-90", new DateTime(2021, 12, 12, 12, 0, 0), 
+                            12, i, 1, "test that need to rm", 1));
                     context.SaveChanges();
                 }
             }
-            
         }
 
         

@@ -100,7 +100,6 @@ D:\Unik\3\1\WEB\WebReservation\WebReservation.API\obj\Debug\net5.0\WebReservatio
 D:\Unik\3\1\WEB\WebReservation\WebReservation.API\obj\Debug\net5.0\WebReservation.API.MvcApplicationPartsAssemblyInfo.cs
 D:\Unik\3\1\WEB\WebReservation\WebReservation.API\obj\Debug\net5.0\WebReservation.API.MvcApplicationPartsAssemblyInfo.cache
 D:\Unik\3\1\WEB\WebReservation\WebReservation.API\obj\Debug\net5.0\staticwebassets\WebReservation.API.StaticWebAssets.Manifest.cache
-D:\Unik\3\1\WEB\WebReservation\WebReservation.API\obj\Debug\net5.0\staticwebassets\WebReservation.API.StaticWebAssets.xml
 D:\Unik\3\1\WEB\WebReservation\WebReservation.API\obj\Debug\net5.0\scopedcss\bundle\WebReservation.API.styles.css
 D:\Unik\3\1\WEB\WebReservation\WebReservation.API\obj\Debug\net5.0\WebReservation.API.RazorTargetAssemblyInfo.cache
 D:\Unik\3\1\WEB\WebReservation\WebReservation.API\obj\Debug\net5.0\WebReservation.API.csproj.CopyComplete
