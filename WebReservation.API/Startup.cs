@@ -42,7 +42,7 @@ namespace WebReservation.API
             services.AddDbContext<WebReservationContext>(options => options.UseNpgsql(connectionString));
 
             // Add Repo pattern for Reservation
-            services.AddScoped<IRepository<reservation>, ReservationRepository>();
+            services.AddScoped<IRepository<reservations>, ReservationRepository>();
 
             // Add Swagger
             services.AddSwaggerGen(c =>
