@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>WebReservation.API</name>
+    </assembly>
+    <members>
+        <member name="M:WebReservation.API.Controllers.ReservationController.Get(System.Int32)">
+            <summary>
+            Gat one reservation by id
+            </summary>
+            <param name="id"></param>
+            <returns>One reservation</returns>
+            <response code="200">Success request</response>
+            <response code="404">Reservation with this id does not exist</response>
+            <response code="400">Input value not valid</response>
+        </member>
+        <member name="M:WebReservation.API.Controllers.ReservationController.Delete(System.Int32)">
+            <summary>
+            Delete one reservation by id
+            </summary>
+            <param name="id"></param>
+            <returns>One reservation</returns>
+            <response code="200">Success request</response>
+            <response code="404">Reservation with this id does not exist</response>
+            <response code="400">Input value not valid</response>
+        </member>
+        <member name="M:WebReservation.API.Controllers.ReservationController.AddReservation(WebReservation.Data.Models.Model)">
+            <summary>
+            Adding reservation json object  
+            </summary>
+            <param name="reservation"></param>
+            <returns>id of reservation</returns>
+            <response code="200">Success request</response>
+            <response code="400">Most likely problems with the type of one of the JSON value</response>
+        </member>
+        <member name="M:WebReservation.API.Controllers.ReservationController.FindFreeTables(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Finds an order by the selected hall, time, number of guests   
+            </summary>
+            <param name="hall, year, month, day, dayHours, minutes, hours, guestNumber,year,month,day,dayHours,minutes,hours,guestNumber"></param>
+            <returns>List of 5 bool values denoting time -30 -15 [selected time] +15 +30</returns>
+            <response code="200">Success request</response>
+        </member>
+        <member name="M:WebReservation.API.Controllers.ReservationController.Get">
+            <summary>
+            Get all reservation in database
+            </summary>
+            <returns>All reservation</returns>
+            <response code="200">Success request</response>
+            <response code="404">Database is empty</response>
+        </member>
+    </members>
+</doc>

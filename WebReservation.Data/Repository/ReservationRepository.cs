@@ -2,6 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.Data.Common;
+using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
@@ -10,58 +13,65 @@ using WebReservation.Data.Models;
 
 namespace WebReservation.Data.Repository
 {
-    public class ReservationRepository : IRepository<reservation>
+    public class ReservationRepository : IRepository<reservations>
     {
         private readonly WebReservationContext context;
-        public ReservationRepository(WebReservationContext context)
+        public ReservationRepository(WebReservationContext _context)
         {
-            this.context = context;
+            context = _context;
         }
-        
-        public IEnumerable<reservation> All 
-            => context.reservations.ToList();
 
-        public void Add(reservation entity) 
-            => context.reservations.Add(entity);
-
-        public void Delete(reservation entity)
+        public IEnumerable<Model> All()
         {
-            context.reservations.Remove(entity);
+            var reservationModels = context.reservations.Join(
+                context.guests, 
+                r => r.guest_id,
+                g => g.id,
+                (r, g) => new Model
+                {
+                    Id = r.id,
+                    GuestId = g.id,
+                    GuestName = g.name, 
+                    PhoneNumber = g.phone_number, 
+                    GuestsNumber = g.number,
+                    Comment = g.comment, 
+                    DateStart = r.date_start_time,
+                    DateEnd = r.date_end_time, 
+                    Hall = r.hall,
+                    Table = r.num_table, 
+                    Hours = r.hours
+                }).AsEnumerable();
+            
+            return reservationModels;
+        }
+
+        public void Delete(int id)
+        {
+            var model = FindById(id);
+            context.reservations.Remove(Model.ToReservation(model));
+            context.guests.Remove(Model.ToGuest(model));
             context.SaveChanges();
         }
-
-        public void Update(reservation entity)
+        
+        public Model FindById(int Id)
         {
-            context.reservations.Update(entity);
-            context.SaveChanges();
+            var reservation = context.reservations.First(i => i.id == Id);
+            var guest = context.guests.First(i => i.id == reservation.guest_id);
+            
+            return Model.ToModel(reservation, guest);
         }
-
-        public reservation FindById(int Id) 
-            => context.reservations.Find(Id);
         
-        // todo доделать
-        public reservation FindByName(string guestName)
-            => context.reservations.FirstOrDefault(guest => guest.guest_name == guestName);
-
-        
-        // todo rm
-        public reservation FindByDate(DateTime dateTime)
-            => context.reservations.FirstOrDefault(date => date.reservation_date == dateTime);
-        
-        // todo можно сделать лучше
-        public List<reservation> FindAllDayReservations(DateTime dateTime)
-            => context.reservations.ToList().Where(reservation => 
-                reservation.reservation_date.ToString().StartsWith($"{dateTime.ToShortDateString()}")).ToList();
+        public List<Model> FindAllDayReservations(DateTime dateTime)
+            => All().Where(r => r.DateStart.ToString().StartsWith($"{dateTime.ToShortDateString()}")).ToList();
 
         private static bool BetweenRange(DateTime x, DateTime min, DateTime max)
             => ((x > min) & (x < max));
-
-        // todo добавить еще метод, чтобы можно было расширить функционал
-        private static bool IsItFreeTime(int hall, DateTime dateTime, int hours, IReadOnlyList<reservation> AllDayReservations, int guestNumber)
+        
+        private static bool IsItFreeTime(int hall, DateTime dateTime, int hours, IReadOnlyList<Model> AllDayReservations, int guestNumber)
         {
             int min = 0, max = 0;
             List<bool> list = new();
-
+        
             if(hall == 1 & guestNumber > 2)
             {
                 min = 9; max = 16;
@@ -83,23 +93,17 @@ namespace WebReservation.Data.Repository
                 for(var i = 0; i < 5; ++i) 
                     list.Add(true);
             }
-
+        
             for (var index = 0; index < AllDayReservations.Count; index++)
             {
-                var reservation = AllDayReservations[index];
-                if ((((reservation.num_table >= min) & (reservation.num_table <= max)) & (reservation.hall == hall) & (
-                        BetweenRange(reservation.reservation_date, dateTime, dateTime.AddHours(hours)) ^
-                        BetweenRange(reservation.end_time_date, dateTime, dateTime.AddHours(hours)) ^
-                        BetweenRange(dateTime, reservation.reservation_date, reservation.end_time_date))))
+                var model = AllDayReservations[index];
+                if ((((model.Table >= min) & (model.Table <= max)) & (model.Hall == hall) & (
+                        BetweenRange(model.DateStart, dateTime, dateTime.AddHours(hours)) ^
+                        BetweenRange(model.DateEnd, dateTime, dateTime.AddHours(hours)) ^
+                        BetweenRange(dateTime, model.DateStart, model.DateEnd))))
                 {
                     list[index] = false;
                 }
-            }
-
-            for (var index = 0; index < list.Count; index++)
-            {
-                var VARIABLE = list[index];
-                Console.WriteLine(index+1 + " - " + VARIABLE);
             }
 
             return list.Contains(true);
@@ -117,16 +121,22 @@ namespace WebReservation.Data.Repository
                 IsItFreeTime(hall, dateTime.Add(TimeSpan.FromMinutes(15)), hours, AllDayReservations, guestNumber),
                 IsItFreeTime(hall, dateTime.Add(TimeSpan.FromMinutes(30)), hours, AllDayReservations, guestNumber)
             };
-
+        
             return result;
         }
-
-        public int AddReservation(reservation _reservation)
-        {
-            context.reservations.Add(_reservation);
-            context.SaveChanges();
         
-            return _reservation.id;
+        public int AddReservation(Model model)
+        {
+            var guest = Model.ToGuest(model);
+            context.guests.Add(guest);
+            context.SaveChanges();
+            
+            var reservation = Model.ToReservation(model);
+            reservation.guest_id = guest.id;
+            context.reservations.Add(reservation);
+            context.SaveChanges();
+
+            return reservation.id;
         }
     }
 }

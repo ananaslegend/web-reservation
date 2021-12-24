@@ -14,7 +14,6 @@ namespace WebReservation.API
     {
         public static void Main(string[] args)
         {
-            Console.WriteLine("HI!");
             CreateHostBuilder(args).Build().Run();
         }
 
