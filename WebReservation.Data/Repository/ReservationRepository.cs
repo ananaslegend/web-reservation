@@ -47,10 +47,14 @@ namespace WebReservation.Data.Repository
 
         public void Delete(int id)
         {
-            var model = FindById(id);
-            context.reservations.Remove(Model.ToReservation(model));
-            context.guests.Remove(Model.ToGuest(model));
+            var reservation = context.reservations.First(i => i.id == id);
+            context.Remove(reservation);
             context.SaveChanges();
+            
+            var guest = context.guests.First(i => i.id == reservation.guest_id);
+            context.Remove(guest);
+            context.SaveChanges();
+            
         }
         
         public Model FindById(int Id)
@@ -125,7 +129,7 @@ namespace WebReservation.Data.Repository
             return result;
         }
         
-        public int AddReservation(Model model)
+        public int Add(Model model)
         {
             var guest = Model.ToGuest(model);
             context.guests.Add(guest);

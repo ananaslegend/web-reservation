@@ -6,10 +6,9 @@ namespace WebReservation.Data.Repository
 {
     public interface IRepository <TEntity> where TEntity: class
     {
-        //IEnumerable<TEntity> All();
-        // void Add(TEntity entity);
-        // void Delete(TEntity entity);
-        // void Update(TEntity entity);
+        // IEnumerable<TEntity> All();
+        // int Add(TEntity entity);
+        // void Delete(int Id);
         // TEntity FindById(int Id);
     }
 }

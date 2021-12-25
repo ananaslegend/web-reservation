@@ -29,7 +29,7 @@ namespace WebReservation.API
             Configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; }
+        private IConfiguration Configuration { get; }
         
         public void ConfigureServices(IServiceCollection services)
         {
@@ -56,8 +56,6 @@ namespace WebReservation.API
         
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            PrepDB.ApplyMigration(app);
-            
             app.UseSwagger();
 
             app.UseSwaggerUI(c =>

@@ -18,7 +18,7 @@ namespace WebReservation.API.Controllers
         private readonly ReservationRepository reservationContext;
 
         public ReservationController(IRepository<reservations> reservationContext)
-            => this.reservationContext = (ReservationRepository)reservationContext;
+            => this.reservationContext = (ReservationRepository) reservationContext;
         
         /// <summary>
         /// Gat one reservation by id
@@ -52,17 +52,17 @@ namespace WebReservation.API.Controllers
         /// <response code="404">Reservation with this id does not exist</response>
         /// <response code="400">Input value not valid</response>
         [HttpDelete("/id")]
-        public ActionResult Delete([FromQuery] int id)
+        public void Delete([FromQuery] int id)
         {
-            try
-            {
+            // try
+            // {
                 reservationContext.Delete(id);
-                return Ok();
-            }
-            catch
-            {
-                return NotFound();
-            }
+            //     return Ok();
+            // }
+            // catch
+            // {
+            //     return NotFound();
+            // }
         }
         
     // [HttpGet("find-by-date/{year:int},{month:int},{day:int}")]
@@ -78,7 +78,7 @@ namespace WebReservation.API.Controllers
     /// <response code="400">Most likely problems with the type of one of the JSON value</response>
     [HttpPost]
         public ActionResult<int> AddReservation([FromBody] Model model)
-            => reservationContext.AddReservation(model);
+            => reservationContext.Add(model);
 
     /// <summary>
     /// Finds an order by the selected hall, time, number of guests   

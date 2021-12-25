@@ -37,7 +37,7 @@
             <summary>
             Finds an order by the selected hall, time, number of guests   
             </summary>
-            <param name="hall, year, month, day, dayHours, minutes, hours, guestNumber,year,month,day,dayHours,minutes,hours,guestNumber"></param>
+            <param name="hall,year,month,day,dayHours,minutes,hours,guestNumber,year,month,day,dayHours,minutes,hours,guestNumber"></param>
             <returns>List of 5 bool values denoting time -30 -15 [selected time] +15 +30</returns>
             <response code="200">Success request</response>
         </member>
